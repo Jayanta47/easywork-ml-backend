@@ -3,6 +3,7 @@ import inspect
 from ml.registry import MLRegistry
 
 from ml.income_classifier.random_forest import RandomForestClassifier
+from ml.income_classifier.random_forest_p import RandomForestClassifierPriority
 
 class MLTests(TestCase):
     def test_rf_algorithm(self):
@@ -45,3 +46,18 @@ class MLTests(TestCase):
                     algorithm_description, algorithm_code)
         # there should be one endpoint available
         self.assertEqual(len(registry.endpoints), 1)
+
+
+    def test_rf_algorithm_p(self):
+        input_data = {
+            "days_to_start": 13,
+            "dependency": 1,
+            "days_to_end": 22,
+            "on_critical_path": 1,
+            "complexity": 2,
+        }
+        my_alg = RandomForestClassifierPriority()
+        response = my_alg.compute_prediction(input_data)
+        self.assertEqual('OK', response['status'])
+        self.assertTrue('label' in response)
+        # self.assertEqual('<=50K', response['label'])
